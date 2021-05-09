@@ -9,8 +9,11 @@ email_func varchar(50),
 tel_func varchar (20),
 endereco_func varchar(200),
 usuario varchar(30),
-senha varchar(20)
+senha varchar(20),
+tipo int
 );
+
+drop table funcionario;
 
 create table arquivoFuncionario (
 cod_func int primary key auto_increment,
@@ -20,13 +23,15 @@ email_func varchar(50),
 tel_func varchar (20),
 endereco_func varchar(200),
 usuario varchar(30),
-senha varchar(20)
+senha varchar(20),
+tipo int
 );
 
 
 create table login (
 usuario varchar(30),
-senha varchar(20)
+senha varchar(20),
+tipo int
 );
 
 create table produto(
@@ -66,7 +71,7 @@ foreign key (cod_prod) references produto(cod_prod)
 );
 
 drop table pedidoArquivados;
-create table pedidoArquivados(
+create table pedidoArquivado(
 cod_pedido int,
 quant_pedido int,
 valor_total float,
@@ -79,7 +84,7 @@ foreign key (cod_pagto) references pagamento(cod_pagto),
 foreign key (cod_cli) references cliente(cod_cli),
 foreign key (cod_prod) references produto(cod_prod)
 );
-
+drop procedure inserirFuncLogin;
 -- PROCEDURES FUNCIONARIO
 -- Procedure para cadastrar funcionario e login
 delimiter $$
@@ -90,18 +95,20 @@ email_func varchar(50),
 tel_func varchar (20),
 endereco_func varchar(200),
 usuario varchar(30),
-senha varchar(20)
+senha varchar(20),
+tipo int
 ) 
 begin
 insert into funcionario(nome_func, cpf_func, email_func, tel_func, endereco_func)
 values (nome_func, cpf_func, email_func, tel_func, endereco_func);
 
-insert into login(usuario, senha) values (usuario, senha);
+insert into login(usuario, senha, tipo) values (usuario, senha, tipo);
 end $$
 delimiter ;
 
-call inserirFuncLogin('Edigar Maia', '00022244478', 'edigarmaia@gmail.com', 3645-4578, 'Rua da Imaginação, 150', 'edigarmaia', 'edigarmaia');
-call inserirFuncLogin('Wesley Amorim', '12345647881', 'wesley@gmail.com', 3645-7845, 'Serra do Mar, 145', 'wesley', 'wesley');
+call inserirFuncLogin('Edigar Maia', '00022244478', 'edigarmaia@gmail.com', 3645-4578, 'Rua da Imaginação, 150', 'edigarmaia', 'edigarmaia', 1);
+call inserirFuncLogin('Wesley Amorim', '12345647881', 'wesley@gmail.com', 3645-7845, 'Serra do Mar, 145', 'wesley', 'wesley', 2);
+call inserirFuncLogin('Amorim', '12345647881', 'wesley@gmail.com', 3645-7841, 'Serra do Mar, 145', 'wesley', 'wesley', 2);
 
 -- Consultando funcionarios
 delimiter $$
@@ -230,12 +237,13 @@ delimiter $$
 create trigger pedidosFinalizados
 before delete on pedido for each row
 begin
-insert into pedidoArquivados(cod_pedido, quant_pedido, valor_total, data_pedido, cod_pagto, cod_cli, cod_prod, status_ped)
+insert into pedidoArquivado(cod_pedido, quant_pedido, valor_total, data_pedido, cod_pagto, cod_cli, cod_prod, status_ped)
 values (old.cod_pedido, old.quant_pedido, old.valor_total, old.data_pedido, old.cod_pagto, old.cod_cli, old.cod_prod, old.status_ped);
 end $$
 delimiter ;
 
-delete from pedido where cod_pedido = 3;
+delete from pedido where cod_pedido = 2;
+drop trigger pedidosFinalizados;
 
 -- criando a trigger para arquivar funcionarios
 delimiter $$
@@ -247,7 +255,7 @@ insert into arquivoFuncionario(nome_func, cpf_func, email_func, tel_func, endere
 end $$
 delimiter ;
 
-delete from funcionario where cod_func = 3;
+delete from funcionario where cod_func = 4;
 select * from arquivoFuncionario;
 
 
