@@ -1,0 +1,6 @@
+Coffee Shop
+
+O cliente tem uma cafeteria, e nos solicitou um sistema onde ele possa cadastrar, consultar, alterar e excluir os seus funcioncionários, esses para acessarem os sistema precisam passar por um login.
+Todos os produtos oferecidos na cafeteria também devem ser cadastrados em seu sistema, para esses produtos também precisa dar as opções de cadastro, alteração, consulta e exclusão.
+Os itens excluidos não devem ser apagados do banco, deverão ser salvos em uma tabela arquivo morto.
+
